@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class Instance {
 	
 	private ArrayList<String> attributes;
-	private int[] values;
+	private ArrayList<Integer> values;
 	
-	public Instance( ArrayList<String> attributes, int[] values )
+	public Instance( ArrayList<String> attributes, ArrayList<Integer> values )
 	{
 		this.attributes = attributes;
 		this.values = values;
@@ -28,24 +28,45 @@ public class Instance {
 		return attributes.get(i);
 	}
 	
+	public int findAttributeValue( String attribute )
+	{
+		int value = -1;
+		for(int i = 0; i < attributes.size()-1; i++)
+		{
+			if(attributes.get(i).equals(  attribute))
+			{
+				value = values.get(i);
+			}
+		}
+		return value;
+	}
+	
 
-	public void setValues( int[] values )
+	public void setValues( ArrayList<Integer> values )
 	{
 		this.values = values;
 	}
 	
-	public int[] getValues( )
+	public ArrayList<Integer> getValues( )
 	{
 		return values;
 	}
 	
 	public int getValue( int i )
 	{
-		return values[i];
+		return values.get(i);
 	}
 	
 	public int getClassification( )
 	{
-		return values[values.length-1];
+		if(values.size() > 0)
+			return values.get(values.size()-1);
+		return -1;
+	}
+	
+	public void removeAttributeValue( int index )
+	{
+		System.out.println("INDEX = " + index);
+		values.remove( index );
 	}
 }
