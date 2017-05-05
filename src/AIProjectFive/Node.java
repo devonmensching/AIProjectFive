@@ -8,12 +8,22 @@ public class Node {
 	private String attribute;
 	private String label;
 	private int classification;
-	private ArrayList<Node> children;
+	private ArrayList<Node> children = new ArrayList<Node>();
 	
 	public Node( ) {}
-	public Node( int  classification )
+	
+	public Node( Node parent, int  classification )
 	{
+		this.parent = parent;
 		this.classification = classification;
+		this.label = "none";
+	}
+	
+	public Node( Node parent, int  classification, String label )
+	{
+		this.parent = parent;
+		this.classification = classification;
+		this.label = label;
 	}
 	
 	public Node( Node parent, String attribute, String label )
@@ -49,9 +59,24 @@ public class Node {
 		return children;
 	}
 	
+	public void addChild( Node child )
+	{
+		children.add( child );
+	}
+	
 	public String getAttribute( )
 	{
 		return attribute;
+	}
+	
+	public int getClassification()
+	{
+		return classification;
+	}
+	
+	public String getLabel( )
+	{
+		return label;
 	}
 	
 	public void printNode()
@@ -66,4 +91,5 @@ public class Node {
 		System.out.println("Classification : " + classification);
 		System.out.println("-----------------------------------");
 	}
+	
 }

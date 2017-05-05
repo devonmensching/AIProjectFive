@@ -29,11 +29,7 @@ public class Driver {
 		buildDecisionTree(examples, attributes, 0, root);
 		
 		// Display or print the decision tree
-		//displayTree( ); 
-		for(int i = 0; i < tree.size(); i++)
-		{
-			tree.get(i).printNode();
-		}
+		displayTree( ); 
 	}
 	
 	// getFileName( ) - returns file name user has entered
@@ -69,20 +65,28 @@ public class Driver {
 	{	
 		if(examples.size() == 0)
 		{
-			return new Node( defualt ) ; 
+			Node node = new Node( parent, defualt ) ;
+			parent.addChild( node );
+			return node;
 		}
 		else if( isSameClassification( examples ) )
 		{
-			return new Node( examples.get(0).getClassification( ) );
+			Node node = new Node( parent, examples.get(0).getClassification( ), examples.get(0).getLabel( parent.getAttribute() ) );
+			parent.addChild( node );
+			return node;
 		}
 		else if( attributes.size() == 0 )
 		{
-			return new Node ( majorityClassification( examples ) );
+			Node node = new Node ( parent, majorityClassification( examples ), examples.get(0).getLabel( parent.getAttribute() ) );
+			parent.addChild( node );
+			return node;
 		}
 		else
 		{
 			String best = bestAttribute(attributes, examples);
-			Node root = new Node(parent, best, "");
+			Node root = new Node(parent, best, examples.get(0).getLabel( parent.getAttribute() ));
+			if( !parent.equals( null ))
+				parent.addChild( root );
 			tree.add( root );
 			int m = majorityClassification( examples );
 			for(int i = 0; i < 2; i++)
@@ -202,8 +206,39 @@ public class Driver {
 	// displayTree( ) - displays a decision tree on the monitor 
 	public static void displayTree( )
 	{
-		System.out.println(tree.get(0).getAttribute());
-		printChildren( tree.get(0));
+		printNode( tree.get(0), "" );
+	}
+	
+	public static void printNode( Node node, String padding )
+	{
+		if( !node.getLabel().equals( "none" ) )
+		{
+			System.out.println(padding + node.getLabel( ) +":");
+		}
+		if( node.getAttribute() != null )
+		{
+			if(node.getLabel().equals( "none" ) )
+				System.out.println( padding + node.getAttribute() );
+			else 
+				System.out.println( padding + "  " + node.getAttribute() );
+		}
+		else 
+		{
+			if(node.getClassification() == 1)
+			{
+				System.out.println(padding + "  " +  attributes.get(attributes.size()-1) + ": TRUE");
+			}
+			else
+			{
+				System.out.println(padding + "  " +  attributes.get(attributes.size()-1) + ": FALSE");
+			}
+		}
+		
+		ArrayList<Node> children = node.getChildren();
+		for(int i = 0; i < children.size(); i++)
+		{
+			printNode( children.get( i ), padding + "  ");
+		}
 	}
 	
 	public static void printChildren( Node node )

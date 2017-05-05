@@ -64,9 +64,21 @@ public class Instance {
 		return -1;
 	}
 	
-	public void removeAttributeValue( int index )
+	
+	
+	public String getLabel( String attribute )
 	{
-		System.out.println("INDEX = " + index);
-		values.remove( index );
+		for(int i = 0; i < attributes.size(); i++)
+		{
+			if(attributes.get(i).equals( attribute ))
+			{
+				if( values.get(i) == 1)
+				{
+					return "Yes";
+				}
+				return "No";
+			}
+		}
+		return "none";
 	}
 }
