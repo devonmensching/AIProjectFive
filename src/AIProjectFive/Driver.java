@@ -30,6 +30,7 @@ public class Driver {
 		
 		// Display or print the decision tree
 		displayTree( ); 
+	
 	}
 	
 	// getFileName( ) - returns file name user has entered
@@ -352,12 +353,10 @@ public class Driver {
 			}
 			
 		}
-		if(p == 0 || n == 0)
-		{
-			return 0;
-		}
+				
 		double total = p + n;
 		double first;
+		
 		if(pTrue == 0 )
 		{
 			first = -(pFalse/p)*(Math.log(pFalse/p)/Math.log(2));
@@ -385,6 +384,14 @@ public class Driver {
 			second = -(nTrue/n)*(Math.log(nTrue/n)/Math.log(2))-(nFalse/n)*(Math.log(nFalse/n)/Math.log(2));
 		}
 		
+		if(p == 0)
+		{
+			return (n/total) * second;
+		}
+		else if(n == 0)
+		{
+			return (p/total)* first;	
+		}
 		return (p/total)* first + (n/total) * second;
 	}
 	

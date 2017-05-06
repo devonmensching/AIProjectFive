@@ -81,4 +81,13 @@ public class Instance {
 		}
 		return "none";
 	}
+	
+	public void printValues()
+	{
+		for(int i = 0; i < values.size(); i++)
+		{
+			System.out.print(values.get(i) + " ");
+		}
+		System.out.println();
+	}
 }
