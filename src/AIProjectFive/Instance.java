@@ -2,6 +2,17 @@ package AIProjectFive;
 
 import java.util.ArrayList;
 
+/*
+ * Instance.java
+ * The Instance Java file contains the code for an Instance object.
+ * An instance object contains a list of attributes and correspond
+ * values to the attributs. These values represent true and false
+ * for each attribute. 
+ * 
+ * by Devon Mensching & Nick Polanco 
+ * 
+ */
+
 public class Instance {
 	
 	private ArrayList<String> attributes;
@@ -13,21 +24,25 @@ public class Instance {
 		this.values = values;
 	}
 	
+	// setAttributes( ) - sets the list of attributes
 	public void setAttributes( ArrayList<String> attributes )
 	{
 		this.attributes = attributes;
 	}
 	
+	// getAttributes( ) - returns a list of attributes
 	public ArrayList<String> getAttributes( )
 	{
 		return attributes;
 	}
 	
+	// getAttribute( ) - returns an attribute at specific index
 	public String getAttribute( int i )
 	{
 		return attributes.get(i);
 	}
 	
+	// findAttributeValue( ) - finds the value of a specific attribute
 	public int findAttributeValue( String attribute )
 	{
 		int value = -1;
@@ -41,22 +56,25 @@ public class Instance {
 		return value;
 	}
 	
-
+	// setValues( ) - sets values 
 	public void setValues( ArrayList<Integer> values )
 	{
 		this.values = values;
 	}
 	
+	// getValues( ) - returns teh ArrayList of values
 	public ArrayList<Integer> getValues( )
 	{
 		return values;
 	}
 	
+	// getValue( ) - returns a value at a specific index
 	public int getValue( int i )
 	{
 		return values.get(i);
 	}
 	
+	// getCalssification( ) - returns the classification 
 	public int getClassification( )
 	{
 		if(values.size() > 0)
@@ -64,8 +82,7 @@ public class Instance {
 		return -1;
 	}
 	
-	
-	
+	// getLabel( ) - returns the label for the instance
 	public String getLabel( String attribute )
 	{
 		for(int i = 0; i < attributes.size(); i++)
@@ -82,12 +99,4 @@ public class Instance {
 		return "none";
 	}
 	
-	public void printValues()
-	{
-		for(int i = 0; i < values.size(); i++)
-		{
-			System.out.print(values.get(i) + " ");
-		}
-		System.out.println();
-	}
 }

@@ -9,6 +9,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/*
+ * Driver.java
+ * The Driver Java file contains the driver program and the build decision tree
+ * algorithm code. Additionally, the information gain calcuations and priting
+ * printing tree methods are here.
+ * 
+ * by Devon Mensching & Nick Polanco 
+ * 
+ */
+
 public class Driver {
 	
 	private static ArrayList<String> attributes;
@@ -33,6 +43,9 @@ public class Driver {
 	
 	}
 	
+	//************************************ Methods for Reading a File ************************************//
+	//****************************************************************************************************//
+	
 	// getFileName( ) - returns file name user has entered
 	public static String getFileName( )
 	{
@@ -42,6 +55,24 @@ public class Driver {
 		String fileName = input.nextLine();
 		input.close();
 		return fileName;
+	}
+	
+	// openFile( String fileName ) - opens a file 
+	public static File openFile( String fileName )
+	{
+		File file = null;
+		try
+		{
+			file = new File( fileName );
+			if( !file.exists() )
+			{
+				System.out.println("This file does not exist.");
+				System.exit(0);
+			}
+		}
+		catch( Exception e ){ }	
+			
+		return file;
 	}
 	
 	// readFile - returns an ArrayList filled with file data
@@ -60,6 +91,9 @@ public class Driver {
 		scanner.close();
 		return fileLines;
 	}
+	
+	//******************************* Methods for Building a Decision Tree *******************************//
+	//****************************************************************************************************//
 	
 	// buildDecisionTree( ) - builds the best decision tree from data
 	public static Node buildDecisionTree(ArrayList<Instance> examples, ArrayList<String> attributes, int defualt, Node parent)
@@ -100,6 +134,7 @@ public class Driver {
 		return new Node();
 	}
 	
+	// attributeIndex( ) - returns the index of an attribute in attributes
 	public static int attributeIndex( String attribute )
 	{
 		for(int i = 0; i < attributes.size(); i++)
@@ -112,6 +147,7 @@ public class Driver {
 		return -1;
 	}
 	
+	// isSameClassification( ) - returns true all examples are of the same cassficiation otherwise false
 	public static boolean isSameClassification(ArrayList<Instance> examples)
 	{
 		int classification = examples.get(0).getClassification();
@@ -125,6 +161,7 @@ public class Driver {
 		return true;
 	}
 	
+	// majorityClassification( ) - returns the majority classification of examples
 	public static int majorityClassification( ArrayList<Instance> examples)
 	{
 		int zero = 0;
@@ -147,6 +184,7 @@ public class Driver {
 		return 1;
 	}
 	
+	// bestAttribute( ) - returns the best attribute based on calculated gain
 	public static String bestAttribute( ArrayList<String> newAttributes, ArrayList<Instance> examples)
 	{
 		ArrayList<Integer> indexes = new ArrayList<Integer>();
@@ -175,6 +213,7 @@ public class Driver {
 		return best;
 	}
 	
+	// findExamples( ) - finds a new set of examples for the attribute
 	public static ArrayList<Instance> findExamples( int attribute, int value, ArrayList<Instance> examples)
 	{
 		ArrayList<Instance> newExamples = new ArrayList<Instance>();
@@ -204,67 +243,7 @@ public class Driver {
 		return newAttributes;
 	}
 	
-	// displayTree( ) - displays a decision tree on the monitor 
-	public static void displayTree( )
-	{
-		printNode( tree.get(0), "" );
-	}
-	
-	public static void printNode( Node node, String padding )
-	{
-		if( !node.getLabel().equals( "none" ) )
-		{
-			System.out.println(padding + node.getLabel( ) +":");
-		}
-		if( node.getAttribute() != null )
-		{
-			if(node.getLabel().equals( "none" ) )
-				System.out.println( padding + node.getAttribute() );
-			else 
-				System.out.println( padding + "  " + node.getAttribute() );
-		}
-		else 
-		{
-			if(node.getClassification() == 1)
-			{
-				System.out.println(padding + "  " +  attributes.get(attributes.size()-1) + ": TRUE");
-			}
-			else
-			{
-				System.out.println(padding + "  " +  attributes.get(attributes.size()-1) + ": FALSE");
-			}
-		}
-		
-		ArrayList<Node> children = node.getChildren();
-		for(int i = 0; i < children.size(); i++)
-		{
-			printNode( children.get( i ), padding + "  ");
-		}
-	}
-	
-	public static void printChildren( Node node )
-	{
-		
-	}
-	// openFile( String fileName ) - opens a file 
-	public static File openFile( String fileName )
-	{
-		File file = null;
-		try
-		{
-			file = new File( fileName );
-			if( !file.exists() )
-			{
-				System.out.println("This file does not exist.");
-				System.exit(0);
-			}
-		}
-		catch( Exception e ){ }	
-			
-		return file;
-	}
-	
-	// createTable( ) - Creates the table from an ArrayList of file data
+	// createExamples( ) - Creates the examples  from an ArrayList of file data
 	public static ArrayList<Instance> createExamples( ArrayList<String> fileData)
 	{
 		// Create tableHeader ArrayList from file data
@@ -275,10 +254,10 @@ public class Driver {
 			attributes.add( fileData.get( count ) );
 			count++;
 		}
-		
+			
 		// Skip over blank line
 		count++;
-		
+			
 		// Create ArrayList of examples 
 		ArrayList<Instance> examples = new ArrayList<Instance>();
 		while( count < fileData.size() )
@@ -294,6 +273,9 @@ public class Driver {
 		}
 		return examples;
 	}
+	
+	//***************************** Methods for Calculating Information Gain *****************************//	
+	//****************************************************************************************************//
 	
 	// calcI( ) - calculates the information 
 	public static double calcI( ArrayList<Instance> examples )
@@ -316,6 +298,7 @@ public class Driver {
 		return -(p/total)*(Math.log(p/total)/Math.log(2))-(n/total)*(Math.log(n/total)/Math.log(2));
 	}
 	
+	// calcIa() - calculates the information for a specific attribute
 	public static double calcIa( int attribute, ArrayList<Instance> examples)
 	{
 		double p = 0.0;
@@ -395,8 +378,52 @@ public class Driver {
 		return (p/total)* first + (n/total) * second;
 	}
 	
+	// clacGain( ) - calculates the gain for a specific attribute
 	public static double calcGain( int attribute, ArrayList<Instance> examples)
 	{
 		return calcI( examples ) - calcIa( attribute, examples);
 	}
+	
+	//*********************************** Methods for Printing the Tree **********************************//
+	//****************************************************************************************************//
+	
+	// displayTree( ) - displays a decision tree on the monitor 
+	public static void displayTree( )
+	{
+		printNode( tree.get(0), "" );
+	}
+		
+	// printNode( ) - prints the nodes in tree
+	public static void printNode( Node node, String padding )
+	{
+		if( !node.getLabel().equals( "none" ) )
+		{
+			System.out.println(padding + node.getLabel( ) +":");
+		}
+		if( node.getAttribute() != null )
+		{
+			if(node.getLabel().equals( "none" ) )
+				System.out.println( padding + node.getAttribute() );
+			else 
+				System.out.println( padding + "  " + node.getAttribute() );
+		}
+		else 
+		{
+			if(node.getClassification() == 1)
+			{
+				System.out.println(padding + "  " +  attributes.get(attributes.size()-1) + ": TRUE");
+			}
+			else
+			{
+				System.out.println(padding + "  " +  attributes.get(attributes.size()-1) + ": FALSE");
+			}
+		}
+			
+		ArrayList<Node> children = node.getChildren();
+		for(int i = 0; i < children.size(); i++)
+		{
+			printNode( children.get( i ), padding + "  ");
+		}
+	}
+		
 }
